@@ -282,6 +282,9 @@ function copyIntoPlace(extractedPath, targetPath) {
     if (fs.statSync(file).isDirectory() && file.indexOf(helper.version) != -1) {
       console.log('Renaming extracted folder', file, '->', targetPath)
       ncp(file, targetPath, deferred.makeNodeResolver())
+      // Some platforms have the directory as non-writeable, which
+      // will prevent the removal below
+      fs.chmodSync(file, '0777')
       break
     }
   }
